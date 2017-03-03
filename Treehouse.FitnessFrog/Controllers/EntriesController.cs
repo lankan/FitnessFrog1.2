@@ -45,13 +45,27 @@ namespace Treehouse.FitnessFrog.Controllers
             {
                 Date = DateTime.Today
             };
+
+            ViewBag.Items = Data.Data.Activities;
+
+            ViewBag.ListActivities = new SelectList(Data.Data.Activities, "Id", "Name");
+
             return View(newEntry);
         }
+
 
         [HttpPost, ActionName("Add")]
         public ActionResult AddPost(Entry entry)
         {
-            
+            if (ModelState.IsValid == true)
+            {
+                _entriesRepository.AddEntry(entry);
+                //Controller.RedirectToAction("index");
+
+            }
+
+            ViewBag.ListActivities = new SelectList(Data.Data.Activities, "Id", "Name");
+
             return View(entry);
         }
 
@@ -74,5 +88,9 @@ namespace Treehouse.FitnessFrog.Controllers
 
             return View();
         }
+
+
+
+     
     }
 }
