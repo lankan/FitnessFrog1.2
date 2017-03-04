@@ -48,23 +48,23 @@ namespace Treehouse.FitnessFrog.Controllers
 
             ViewBag.Items = Data.Data.Activities;
 
-            ViewBag.ListActivities = new SelectList(Data.Data.Activities, "Id", "Name");
+            PopulateActivitiesList();
 
             return View(newEntry);
         }
 
-
+  
         [HttpPost, ActionName("Add")]
         public ActionResult AddPost(Entry entry)
         {
             if (ModelState.IsValid == true)
             {
                 _entriesRepository.AddEntry(entry);
-               
+                return RedirectToAction("Index");
 
             }
 
-            ViewBag.ListActivities = new SelectList(Data.Data.Activities, "Id", "Name");
+            PopulateActivitiesList();
 
             return View(entry);
         }
@@ -76,8 +76,40 @@ namespace Treehouse.FitnessFrog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
+            //Get entry from the repository 
+            Entry entry = _entriesRepository.GetEntry((int)id); 
+
+            //return a status of not found if not found
+            if (entry ==null)
+            {
+                return HttpNotFound(); 
+            }
+            //if found pass the entry to the view
+            PopulateActivitiesList();
+            return View(entry);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Entry entry)
+        {
+            //validate the entry 
+            if (ModelState.IsValid)
+            {
+                _entriesRepository.UpdateEntry(entry);
+                return RedirectToAction("Index");
+             }
+            // use the repository to update the entry  
+            // return the user to the entries list page
+
+            PopulateActivitiesList();
             return View();
         }
+
+        private void PopulateActivitiesList()
+        {
+            ViewBag.ListActivities = new SelectList(Data.Data.Activities, "Id", "Name");
+        }
+
 
         public ActionResult Delete(int? id)
         {
