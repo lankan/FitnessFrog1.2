@@ -9,6 +9,7 @@
 
 @using (Html.BeginForm())
 {
+    @Html.ValidationSummary("Following Error Were Found", new { @class = "alert alert-danger" })
     <div class="row">
 
         <div class="col-md-6">
