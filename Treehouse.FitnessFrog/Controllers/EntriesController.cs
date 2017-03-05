@@ -105,12 +105,7 @@ namespace Treehouse.FitnessFrog.Controllers
             return View();
         }
 
-        private void PopulateActivitiesList()
-        {
-            ViewBag.ListActivities = new SelectList(Data.Data.Activities, "Id", "Name");
-        }
-
-
+     
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -118,11 +113,35 @@ namespace Treehouse.FitnessFrog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return View();
+            //Get entry from the repository 
+            Entry entry = _entriesRepository.GetEntry((int)id);
+            
+            //return a status of not found if not found
+            if (entry == null)
+            {
+                return HttpNotFound();
+            }
+
+            PopulateActivitiesList();
+
+            return View(entry);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+
+            _entriesRepository.DeleteEntry(id);
+
+            return RedirectToAction("Index");
+        }
+
+        private void PopulateActivitiesList()
+        {
+            ViewBag.ListActivities = new SelectList(Data.Data.Activities, "Id", "Name");
         }
 
 
 
-     
     }
 }
