@@ -80,7 +80,7 @@ namespace Treehouse.FitnessFrog.Controllers
             Entry entry = _entriesRepository.GetEntry((int)id); 
 
             //return a status of not found if not found
-            if (entry ==null)
+            if (entry == null)
             {
                 return HttpNotFound(); 
             }
